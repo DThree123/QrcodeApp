@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .qr-output {
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .qr-output h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        #qrcode {
+            display: inline-block;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+        
+        #qrcode img {
+            max-width: 100%;
+        }
+        
+        .print-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .print-btn:hover {
+            background: #218838;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+            }
+            #qrForm, .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        
+        <form id="qrForm" onsubmit="generateQR(event)">
+            <div class="form-group">
+                <label for="field1">Serial Number</label>
+                <input type="text" id="field1" placeholder="Enter text" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="dateField">Date</label>
+                <input type="date" id="dateField" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="field2">URL</label>
+                <input type="text" id="field2" value="https://time-tech.co/" disabled>
+            </div>
+            
+            <button type="submit">Generate QR Code</button>
+        </form>
+        
+        <div class="qr-output hidden" id="qrOutput">
+           
+            <div id="qrcode"></div>
+            <button class="print-btn" onclick="printQR()">Print QR Code</button>
+        </div>
+    </div>
+    
+    <script>
+        function generateQR(event) {
+            event.preventDefault();
+            
+            const field1 = document.getElementById('field1').value;
+            const dateField = document.getElementById('dateField').value;
+            const field2 = document.getElementById('field2').value;
+            
+            const qrData = `Serial Number: ${field1}\nDate: ${dateField}\nURL: ${field2}`;
+            
+            document.getElementById('qrcode').innerHTML = '';
+            
+            const qr = new QRCode(document.getElementById('qrcode'), {
+                text: qrData,
+                width: 150,
+                height: 150,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            document.getElementById('qrOutput').classList.remove('hidden');
+        }
+        
+        function printQR() {
+            window.print();
+        }
+    </script>
+</body>
+</html>

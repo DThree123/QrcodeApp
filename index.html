@@ -131,45 +131,33 @@
         }
 
         /* Print layout */
-        @media print {
+      @media print {
             body {
                 background: white;
                 padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
             }
 
             .container {
                 box-shadow: none;
                 max-width: 100%;
-                padding: 20px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
+                padding: 0;
+                background: white;
             }
 
-            #qrForm {
-                display: none;
+            /* Hide everything except QR */
+            #qrForm, .header {
+                display: none !important;
             }
 
             #qrcode {
                 display: block !important;
-                margin: 20px auto;
-                padding: 10px;
-                background: white;
-                border-radius: 12px;
-            }
-
-            .header {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                margin-bottom: 20px;
-            }
-
-            .banner, h1, .subtitle {
-                display: block;
-                text-align: center;
+                margin: 0 auto;
+                width: 150px;  /* smaller QR */
+                height: 150px;
             }
         }
     </style>

@@ -11,192 +11,240 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #F5F5F5;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
-        
+
         .container {
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
             padding: 40px;
-            max-width: 500px;
+            max-width: 550px;
             width: 100%;
         }
-        
-        h1 {
+
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 35px;
             text-align: center;
-            color: #333;
-            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            padding: 10px;
+            background: #F5F5F5;
+            border-radius: 15px;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        h1 {
+            color: #008F90;
             font-size: 28px;
+            font-weight: 400;
+            margin-bottom: 5px;
         }
-        
+
+        .subtitle {
+            color: #737478;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
-        
+
         label {
             display: block;
             margin-bottom: 8px;
-            color: #555;
-            font-weight: 600;
+            color: #008F90;
+            font-weight: 400;
             font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        
+
         input {
             width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s;
+            padding: 14px 16px;
+            border: 2px solid #E8E8E8;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s ease;
             font-family: inherit;
+            background: #FAFAFA;
         }
-        
+
         input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #008F90;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 143, 144, 0.1);
         }
-        
+
         button {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 16px;
+            background: linear-gradient(135deg, #008F90 0%, #006B6C 100%);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 400;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin-top: 10px;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(0, 143, 144, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        
+
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 25px rgba(0, 143, 144, 0.4);
         }
-        
+
         button:active {
             transform: translateY(0);
         }
-        
-        .qr-output {
-            margin-top: 40px;
-            text-align: center;
-        }
-        
-        .qr-output h3 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 16px;
-        }
-        
+
+        /* Hide QR in UI */
         #qrcode {
-            display: inline-block;
-            padding: 15px;
-            background: #f9f9f9;
-            border-radius: 10px;
+            display: none;
         }
-        
-        #qrcode img {
-            max-width: 100%;
-        }
-        
-        .print-btn {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: #28a745;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        
-        .print-btn:hover {
-            background: #218838;
-        }
-        
+
+        /* Print layout */
         @media print {
             body {
                 background: white;
+                padding: 0;
             }
+
             .container {
                 box-shadow: none;
                 max-width: 100%;
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
             }
-            #qrForm, .print-btn {
+
+            #qrForm {
                 display: none;
+            }
+
+            #qrcode {
+                display: block !important;
+                margin: 20px auto;
+                padding: 10px;
+                background: white;
+                border-radius: 12px;
+            }
+
+            .header {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            .logo, h1, .subtitle {
+                display: block;
+                text-align: center;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        
-        
-        <form id="qrForm" onsubmit="generateQR(event)">
+        <div class="header">
+            <div class="logo">
+                <img src="/Users/d3/Desktop/QrcodeApp/images/app_icon.png" alt="App Logo">
+            </div>
+            <h1>QR Code Generator</h1>
+            <p class="subtitle">Create and Print QR Codes Instantly</p>
+        </div>
+
+        <form id="qrForm" onsubmit="printQR(event)">
             <div class="form-group">
                 <label for="field1">Serial Number</label>
-                <input type="text" id="field1" placeholder="Enter text" required>
+                <input type="text" id="field1" placeholder="Enter serial number" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="productField">Product</label>
+                <input type="text" id="productField" placeholder="Enter product name" required>
             </div>
             
             <div class="form-group">
                 <label for="dateField">Date</label>
                 <input type="date" id="dateField" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="field2">URL</label>
                 <input type="text" id="field2" value="https://time-tech.co/" disabled>
             </div>
-            
-            <button type="submit">Generate QR Code</button>
+
+            <button type="submit">Print QR Code</button>
         </form>
-        
-        <div class="qr-output hidden" id="qrOutput">
-           
-            <div id="qrcode"></div>
-            <button class="print-btn" onclick="printQR()">Print QR Code</button>
-        </div>
+
+        <div id="qrcode"></div>
     </div>
-    
+
     <script>
-        function generateQR(event) {
-            event.preventDefault();
-            
+        function generateQR() {
             const field1 = document.getElementById('field1').value;
+            const productField = document.getElementById('productField').value;
             const dateField = document.getElementById('dateField').value;
             const field2 = document.getElementById('field2').value;
-            
-            const qrData = `Serial Number: ${field1}\nDate: ${dateField}\nURL: ${field2}`;
-            
+
+            // Format date as dd-mm-yyyy
+            const formattedDate = new Date(dateField).toLocaleDateString('en-GB');
+
+            const qrData = 
+                `Serial Number: ${field1}\n` +
+                `Product: ${productField}\n` +
+                `Date: ${formattedDate}\n` +
+                `URL: ${field2}`;
+
             document.getElementById('qrcode').innerHTML = '';
-            
-            const qr = new QRCode(document.getElementById('qrcode'), {
+
+            new QRCode(document.getElementById('qrcode'), {
                 text: qrData,
-                width: 150,
-                height: 150,
+                width: 150,   // smaller QR
+                height: 150,  // smaller QR
                 colorDark: '#000000',
                 colorLight: '#ffffff',
                 correctLevel: QRCode.CorrectLevel.H
             });
-            
-            document.getElementById('qrOutput').classList.remove('hidden');
         }
-        
-        function printQR() {
-            window.print();
+
+        function printQR(event) {
+            event.preventDefault();
+            generateQR();
+            setTimeout(() => {
+                window.print();
+            }, 300);
         }
     </script>
 </body>

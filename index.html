@@ -41,19 +41,18 @@
         }
 
         .banner {
-    width: 100%;
-    max-height: 80px; /* reduced from 120px */
-    overflow: hidden;
-    margin-bottom: 20px;
-    border-radius: 10px;
-}
+            width: 100%;
+            max-height: 80px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
 
-.banner img {
-    width: auto;       /* maintain original aspect ratio */
-    height: 80px;      /* match max-height */
-    object-fit: contain; /* show full logo without cropping */
-}
-
+        .banner img {
+            width: auto;
+            height: 80px;
+            object-fit: contain;
+        }
 
         h1 {
             color: #008F90;
@@ -125,40 +124,8 @@
             transform: translateY(0);
         }
 
-        /* Hide QR in UI */
         #qrcode {
             display: none;
-        }
-
-        /* Print layout */
-      @media print {
-            body {
-                background: white;
-                padding: 0;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100vh;
-            }
-
-            .container {
-                box-shadow: none;
-                max-width: 100%;
-                padding: 0;
-                background: white;
-            }
-
-            /* Hide everything except QR */
-            #qrForm, .header {
-                display: none !important;
-            }
-
-            #qrcode {
-                display: block !important;
-                margin: 0 auto;
-                width: 150px;  /* smaller QR */
-                height: 150px;
-            }
         }
     </style>
 </head>
@@ -169,10 +136,10 @@
                 <img src="images/app_logo.png" alt="App Logo">
             </div>
             <h1>QR Code Generator</h1>
-            <p class="subtitle">Create and Print QR Codes Instantly</p>
+            <p class="subtitle">Create and Download QR Codes Instantly</p>
         </div>
 
-        <form id="qrForm" onsubmit="printQR(event)">
+        <form id="qrForm" onsubmit="handleSubmit(event)">
             <div class="form-group">
                 <label for="field1">Serial Number</label>
                 <input type="text" id="field1" placeholder="Enter serial number" required>
@@ -193,7 +160,7 @@
                 <input type="text" id="field2" value="https://time-tech.co/" disabled>
             </div>
 
-            <button type="submit">Print QR Code</button>
+            <button type="submit">Download QR Code (JPG)</button>
         </form>
 
         <div id="qrcode"></div>
@@ -206,7 +173,6 @@
             const dateField = document.getElementById('dateField').value;
             const field2 = document.getElementById('field2').value;
 
-            // Format date as dd-mm-yyyy
             const formattedDate = new Date(dateField).toLocaleDateString('en-GB');
 
             const qrData = 
@@ -219,20 +185,39 @@
 
             new QRCode(document.getElementById('qrcode'), {
                 text: qrData,
-                width: 150,   // smaller QR
-                height: 150,  // smaller QR
+                width: 200,
+                height: 200,
                 colorDark: '#000000',
                 colorLight: '#ffffff',
                 correctLevel: QRCode.CorrectLevel.H
             });
         }
 
-        function printQR(event) {
+        function downloadQRAsJPG() {
+            const qrCanvas = document.querySelector('#qrcode canvas');
+            if (!qrCanvas) {
+                alert("Please generate a QR first!");
+                return;
+            }
+
+            // Convert QR canvas to JPG data URL
+            const dataURL = qrCanvas.toDataURL('image/jpeg');
+
+            // Create download link
+            const link = document.createElement('a');
+            link.href = dataURL;
+            link.download = 'qr_code.jpg';
+            link.click();
+        }
+
+        function handleSubmit(event) {
             event.preventDefault();
             generateQR();
+
+            // Wait for QR to render before downloading
             setTimeout(() => {
-                window.print();
-            }, 300);
+                downloadQRAsJPG();
+            }, 500);
         }
     </script>
 </body>

@@ -168,30 +168,34 @@
 
     <script>
         function generateQR() {
-            const field1 = document.getElementById('field1').value;
-            const productField = document.getElementById('productField').value;
-            const dateField = document.getElementById('dateField').value;
-            const field2 = document.getElementById('field2').value;
+    const field1 = document.getElementById('field1').value.trim();
+    const productField = document.getElementById('productField').value.trim();
+    const dateField = document.getElementById('dateField').value;
+    const field2 = document.getElementById('field2').value;
 
-            const formattedDate = new Date(dateField).toLocaleDateString('en-GB');
+    const formattedDate = new Date(dateField).toLocaleDateString('en-GB');
 
-            const qrData = 
-                `Serial Number: ${field1}\n` +
-                `Product: ${productField}\n` +
-                `Date: ${formattedDate}\n` +
-                `URL: ${field2}`;
+    // ✅ Compact JSON-like string
+    const qrData = JSON.stringify({
+        serialno: field1,
+        product: productField,
+        date: formattedDate,
+        url: field2
+    });
 
-            document.getElementById('qrcode').innerHTML = '';
+    const qrContainer = document.getElementById('qrcode');
+    qrContainer.innerHTML = '';
 
-            new QRCode(document.getElementById('qrcode'), {
-                text: qrData,
-                width: 200,
-                height: 200,
-                colorDark: '#000000',
-                colorLight: '#ffffff',
-                correctLevel: QRCode.CorrectLevel.H
-            });
-        }
+    new QRCode(qrContainer, {
+        text: qrData,
+        width: 200,
+        height: 200,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M // Medium correction = faster scan
+    });
+}
+
 
         function downloadQRAsJPG() {
             const qrCanvas = document.querySelector('#qrcode canvas');

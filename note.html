@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RMS CDU Device Note</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; font-family: Arial, Helvetica, sans-serif; background: #f3f6f6; color: #202728; display: grid; place-items: center; padding: 24px; }
+.card { width: min(100%, 520px); background: #fff; border: 1px solid #dce5e5; border-radius: 18px; padding: 28px; box-shadow: 0 10px 30px rgba(20,40,40,.08); }
+.kicker { color: #0e888b; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+h1 { margin: 8px 0 24px; font-size: 30px; }
+.row { padding: 16px 0; border-top: 1px solid #e7eded; }
+.label { display: block; color: #687475; font-size: 13px; margin-bottom: 6px; }
+.value { font-size: 19px; font-weight: 600; overflow-wrap: anywhere; }
+.footer { margin-top: 22px; color: #687475; font-size: 12px; }
+</style>
+</head>
+<body>
+<main class="card">
+  <div class="kicker">Device information</div>
+  <h1>RMS CDU</h1>
+  <div class="row"><span class="label">Name</span><div class="value" id="name">RMS CDU</div></div>
+  <div class="row"><span class="label">Serial No.</span><div class="value" id="serial">—</div></div>
+  <div class="row"><span class="label">Date Delivery</span><div class="value" id="date">11 October 2026</div></div>
+  <div class="footer">TimeTech • Device record</div>
+</main>
+<script>
+const params = new URLSearchParams(window.location.search);
+const serial = params.get('s') || '';
+if (/^TTQ-CDU\d{3}$/.test(serial)) {
+  document.getElementById('serial').textContent = serial;
+} else {
+  document.getElementById('serial').textContent = 'Serial number not found';
+}
+</script>
+</body>
+</html>

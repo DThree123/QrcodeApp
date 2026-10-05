@@ -1,40 +1,570 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>QR Code Generator</title>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:'Segoe UI',Arial;background:#F5F5F5;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}.box{background:#fff;border-radius:20px;padding:40px;max-width:620px;width:100%;box-shadow:0 15px 50px #0001}h1{text-align:center;color:#008F90;font-weight:400}.sub{text-align:center;color:#737478;font-size:14px}.tabs{display:flex;gap:10px;margin:25px 0}.tabs button{margin:0;background:#eee;color:#555}.tabs button.active{background:#008F90;color:#fff}.panel{display:none}.panel.active{display:block}.g{margin:18px 0}label{display:block;color:#008F90;font-size:14px;margin-bottom:7px;text-transform:uppercase}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}input{width:100%;padding:13px;border:2px solid #e8e8e8;border-radius:10px;font-size:15px}button{width:100%;padding:15px;border:0;border-radius:10px;background:#008F90;color:#fff;font-size:16px;cursor:pointer}.hint{font-size:12px;color:#737478;margin-top:6px}#qrcode{position:absolute;left:-9999px}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Arial;
+  background: #F5F5F5;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.box {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 620px;
+  width: 100%;
+  box-shadow: 0 15px 50px #0001;
+}
+
+h1 {
+  text-align: center;
+  color: #008F90;
+  font-weight: 400;
+}
+
+.sub {
+  text-align: center;
+  color: #737478;
+  font-size: 14px;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin: 25px 0;
+}
+
+.tabs button {
+  margin: 0;
+  background: #eee;
+  color: #555;
+}
+
+.tabs button.active {
+  background: #008F90;
+  color: #fff;
+}
+
+.panel {
+  display: none;
+}
+
+.panel.active {
+  display: block;
+}
+
+.g {
+  margin: 18px 0;
+}
+
+label {
+  display: block;
+  color: #008F90;
+  font-size: 14px;
+  margin-bottom: 7px;
+  text-transform: uppercase;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+input {
+  width: 100%;
+  padding: 13px;
+  border: 2px solid #e8e8e8;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  border: 0;
+  border-radius: 10px;
+  background: #008F90;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.hint {
+  font-size: 12px;
+  color: #737478;
+  margin-top: 6px;
+}
+
+#qrcode {
+  position: absolute;
+  left: -9999px;
+}
+
 </style>
 </head>
-<body><div class="box">
-<h1>QR Code Generator</h1><p class="sub">Create one QR or many QR codes</p>
-<div class="tabs"><button id="singleTab" class="active" onclick="mode('single')">Single QR</button><button id="bulkTab" onclick="mode('bulk')">Bulk QR</button></div>
+
+<body>
+
+<div class="box">
+
+<h1>QR Code Generator</h1>
+
+<p class="sub">
+Create one QR or many QR codes
+</p>
+
+<div class="tabs">
+
+<button
+id="singleTab"
+class="active"
+onclick="mode('single')">
+Single QR
+</button>
+
+<button
+id="bulkTab"
+onclick="mode('bulk')">
+Bulk QR
+</button>
+
+</div>
+
 
 <div id="single" class="panel active">
-<div class="g"><label>Device Name</label><input id="sName" placeholder="e.g. RMS CDU"></div>
-<div class="g"><label>Serial Number</label><input id="sSerial" placeholder="e.g. TTQ-CDU074"></div>
-<div class="g"><label>Delivery Date</label><input id="sDate" type="date"></div>
-<button onclick="singleQR()">Generate & Download QR (JPG)</button>
+
+<div class="g">
+
+<label>Device Name</label>
+
+<input
+id="sName"
+placeholder="e.g. RMS CDU">
+
 </div>
 
-<div id="bulk" class="panel">
-<div class="g"><label>Device Name</label><input id="bName" value="RMS CDU"></div>
-<div class="g"><label>Serial Numbers</label><div class="row"><div><input id="prefix" value="TTQ-CDU"><div class="hint">Prefix</div></div><div><input id="digits" type="number" value="3"><div class="hint">Digits</div></div></div>
-<div class="row" style="margin-top:10px"><div><input id="start" type="number" value="1"><div class="hint">Start</div></div><div><input id="end" type="number" value="73"><div class="hint">End</div></div></div></div>
-<div class="g"><label>Delivery Date</label><input id="bDate" type="date" value="2026-10-11"></div>
-<button id="bulkBtn" onclick="bulkQR()">Generate All QR Codes (A4 PDF)</button>
+
+<div class="g">
+
+<label>Serial Number</label>
+
+<input
+id="sSerial"
+placeholder="e.g. TTQ-CDU074">
+
 </div>
-<p class="hint" style="text-align:center">QR opens the device information page. Bulk PDF QR size: 2.1 × 2.1 cm.</p>
-</div><div id="qrcode"></div>
+
+
+<div class="g">
+
+<label>Delivery Date</label>
+
+<input
+id="sDate"
+type="date">
+
+</div>
+
+
+<button onclick="singleQR()">
+Generate & Download QR (JPG)
+</button>
+
+</div>
+
+
+<div id="bulk" class="panel">
+
+<div class="g">
+
+<label>Device Name</label>
+
+<input
+id="bName"
+value="RMS CDU">
+
+</div>
+
+
+<div class="g">
+
+<label>Serial Numbers</label>
+
+<div class="row">
+
+<div>
+
+<input
+id="prefix"
+value="TTQ-CDU">
+
+<div class="hint">
+Prefix
+</div>
+
+</div>
+
+
+<div>
+
+<input
+id="digits"
+type="number"
+value="3">
+
+<div class="hint">
+Digits
+</div>
+
+</div>
+
+</div>
+
+
+<div
+class="row"
+style="margin-top:10px">
+
+<div>
+
+<input
+id="start"
+type="number"
+value="1">
+
+<div class="hint">
+Start
+</div>
+
+</div>
+
+
+<div>
+
+<input
+id="end"
+type="number"
+value="73">
+
+<div class="hint">
+End
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="g">
+
+<label>Delivery Date</label>
+
+<input
+id="bDate"
+type="date"
+value="2026-10-11">
+
+</div>
+
+
+<button
+id="bulkBtn"
+onclick="bulkQR()">
+
+Generate All QR Codes (A4 PDF)
+
+</button>
+
+</div>
+
+
+<p
+class="hint"
+style="text-align:center">
+
+QR opens the device information page.
+Bulk PDF QR size: 2.1 × 2.1 cm.
+
+</p>
+
+</div>
+
+
+<div id="qrcode"></div>
+
+
 <script>
-function mode(m){document.getElementById('single').classList.toggle('active',m==='single');document.getElementById('bulk').classList.toggle('active',m==='bulk');document.getElementById('singleTab').classList.toggle('active',m==='single');document.getElementById('bulkTab').classList.toggle('active',m==='bulk')}
-function base(){return location.origin+location.pathname.replace(/\/[^\/]*$/,'/')+'note.html'}
-function url(n,s,d){return base()+'?n='+encodeURIComponent(n)+'&s='+encodeURIComponent(s)+'&d='+encodeURIComponent(d)}
-function makeQR(text,size=500){return new Promise(resolve=>{let q=document.getElementById('qrcode');q.innerHTML='';new QRCode(q,{text,width:size,height:size,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.M});setTimeout(()=>resolve(q.querySelector('canvas').toDataURL('image/png')),100)})}
-function singleQR(){let n=sName.value.trim(),s=sSerial.value.trim(),d=sDate.value;if(!n||!s||!d){alert('Please fill all fields.');return}makeQR(url(n,s,d),700).then(img=>{let a=document.createElement('a');a.href=img;a.download=s+'_QR.jpg';a.click()})}
-function pad(n,d){return String(n).padStart(d,'0')}
-async function bulkQR(){let btn=bulkBtn,n=bName.value.trim(),pre=prefix.value.trim(),dig=+digits.value,st=+start.value,en=+end.value,d=bDate.value;if(!n||!pre||!dig||!d||en<st){alert('Check the fields.');return}if(en-st+1>500){alert('Maximum 500 per batch.');return}btn.disabled=true;btn.textContent='Generating...';let {jsPDF}=window.jspdf,pdf=new jsPDF({unit:'mm',format:'a4'}),size=21,cols=6,rows=8,gx=8,gy=6,cw=(210-24-(cols-1)*gx)/cols,ch=(297-20-(rows-1)*gy)/rows,total=en-st+1;for(let i=0;i<total;i++){if(i&&i%(cols*rows)==0)pdf.addPage();let slot=i%(cols*rows),r=Math.floor(slot/cols),c=slot%cols,serial=pre+pad(st+i,dig),img=await makeQR(url(n,serial,d));let x=12+c*(cw+gx)+(cw-size)/2,y=10+r*(ch+gy)+2;pdf.addImage(img,'PNG',x,y,size,size)}pdf.save(n.replace(/[^a-z0-9_-]+/gi,'_')+'_QR_Codes_'+total+'.pdf');btn.disabled=false;btn.textContent='Generate All QR Codes (A4 PDF)'}
-</script></body></html>
+
+function mode(m) {
+
+  document
+    .getElementById('single')
+    .classList
+    .toggle('active', m === 'single');
+
+  document
+    .getElementById('bulk')
+    .classList
+    .toggle('active', m === 'bulk');
+
+  document
+    .getElementById('singleTab')
+    .classList
+    .toggle('active', m === 'single');
+
+  document
+    .getElementById('bulkTab')
+    .classList
+    .toggle('active', m === 'bulk');
+
+}
+
+
+function base() {
+
+  return location.origin +
+    location.pathname.replace(/\/[^\/]*$/, '/') +
+    'note.html';
+
+}
+
+
+function url(n, s, d) {
+
+  return base() +
+    '?n=' + encodeURIComponent(n) +
+    '&s=' + encodeURIComponent(s) +
+    '&d=' + encodeURIComponent(d);
+
+}
+
+
+function makeQR(text, size = 500) {
+
+  return new Promise(resolve => {
+
+    let q = document.getElementById('qrcode');
+
+    q.innerHTML = '';
+
+    new QRCode(q, {
+      text: text,
+      width: size,
+      height: size,
+      colorDark: '#000',
+      colorLight: '#fff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+
+    setTimeout(() => {
+
+      resolve(
+        q
+          .querySelector('canvas')
+          .toDataURL('image/png')
+      );
+
+    }, 100);
+
+  });
+
+}
+
+
+function singleQR() {
+
+  let n = sName.value.trim();
+  let s = sSerial.value.trim();
+  let d = sDate.value;
+
+  if (!n || !s || !d) {
+
+    alert('Please fill all fields.');
+
+    return;
+  }
+
+
+  makeQR(url(n, s, d), 700)
+    .then(img => {
+
+      let a = document.createElement('a');
+
+      a.href = img;
+
+      a.download = s + '_QR.jpg';
+
+      a.click();
+
+    });
+
+}
+
+
+function pad(n, d) {
+
+  return String(n).padStart(d, '0');
+
+}
+
+
+async function bulkQR() {
+
+  let btn = bulkBtn;
+
+  let n = bName.value.trim();
+
+  let pre = prefix.value.trim();
+
+  let dig = +digits.value;
+
+  let st = +start.value;
+
+  let en = +end.value;
+
+  let d = bDate.value;
+
+
+  if (!n || !pre || !dig || !d || en < st) {
+
+    alert('Check the fields.');
+
+    return;
+
+  }
+
+
+  if (en - st + 1 > 500) {
+
+    alert('Maximum 500 per batch.');
+
+    return;
+
+  }
+
+
+  btn.disabled = true;
+
+  btn.textContent = 'Generating...';
+
+
+  let { jsPDF } = window.jspdf;
+
+
+  let pdf = new jsPDF({
+    unit: 'mm',
+    format: 'a4'
+  });
+
+
+  let size = 21;
+
+  let cols = 6;
+
+  let rows = 8;
+
+  let gx = 8;
+
+  let gy = 6;
+
+  let cw =
+    (210 - 24 - (cols - 1) * gx) / cols;
+
+  let ch =
+    (297 - 20 - (rows - 1) * gy) / rows;
+
+  let total = en - st + 1;
+
+
+  for (let i = 0; i < total; i++) {
+
+    if (i && i % (cols * rows) === 0) {
+
+      pdf.addPage();
+
+    }
+
+
+    let slot = i % (cols * rows);
+
+    let r = Math.floor(slot / cols);
+
+    let c = slot % cols;
+
+
+    let serial =
+      pre + pad(st + i, dig);
+
+
+    let img =
+      await makeQR(
+        url(n, serial, d)
+      );
+
+
+    let x =
+      12 +
+      c * (cw + gx) +
+      (cw - size) / 2;
+
+
+    let y =
+      10 +
+      r * (ch + gy) +
+      2;
+
+
+    pdf.addImage(
+      img,
+      'PNG',
+      x,
+      y,
+      size,
+      size
+    );
+
+  }
+
+
+  pdf.save(
+    n.replace(/[^a-z0-9_-]+/gi, '_') +
+    '_QR_Codes_' +
+    total +
+    '.pdf'
+  );
+
+
+  btn.disabled = false;
+
+  btn.textContent =
+    'Generate All QR Codes (A4 PDF)';
+
+}
+
+</script>
+
+</body>
+</html>
